@@ -22,46 +22,71 @@ import AdminUsersPage from './pages/admin/AdminUsersPage';
 import AdminAnalyticsPage from './pages/admin/AdminAnalyticsPage';
 import AdminChatsPage from './pages/admin/AdminChatsPage';
 import AdminEditUserPage from './pages/admin/AdminEditUserPage'
-
+ // Componenets
+ import HeaderComponent from './components/HeaderComponent';
+ import FooterComponent from './components/FooterComponent';
 import ProtectedRoutesComponenet from './components/ProtectedRoutesComponenet'; 
+// user Componenets 
 
+import RoutesWithUserChatComponent from './components/user/RoutesWithUserChatComponent';
 function App() {
   return (
     <>
       <BrowserRouter>
+        <HeaderComponent />
         <Routes>
-          <Route path='/home' element={<HomePage />} />
-          <Route path='/cart' element={<CartPage />} />
-          <Route path='/login' element={<LoginPage />} />
-          <Route path='/product-details' element={<ProducDetailsPage />} />
-          <Route path='/product-details/:id' element={<ProducDetailsPage />} />
-          <Route path='/product-list' element={<ProducListPage />} />
-          <Route path='/register' element={<RegisterPage />} />
-          <Route path='*' element={"page not Exist 404"} />
+          <Route element={<RoutesWithUserChatComponent />}>
+            {/* publicly available route */}
 
-          {/* user protected routes */}
-          <Route element={<ProtectedRoutesComponenet />} >
-          <Route path='/user/cart-details' element={<UserCartDetailsPage />} />
-          <Route path='/user/order-details' element={<UserOrderDetailsPage />} />
-          <Route path='/user/orders' element={<UserOrdersPage />} />
-          <Route path='/user/profile' element={<UserProfilePage />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/product-details" element={<ProducDetailsPage />} />
+            <Route
+              path="/product-details/:id"
+              element={<ProducDetailsPage />}
+            />
+            <Route path="/product-list" element={<ProducListPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="*" element={'page not Exist 404'} />
           </Route>
-          
+          {/* user protected routes */}
+          <Route element={<ProtectedRoutesComponenet admin={false} />}>
+            <Route
+              path="/user/cart-details"
+              element={<UserCartDetailsPage />}
+            />
+            <Route
+              path="/user/order-details"
+              element={<UserOrderDetailsPage />}
+            />
+            <Route path="/user/orders" element={<UserOrdersPage />} />
+            <Route path="/user/profile" element={<UserProfilePage />} />
+          </Route>
+
           {/* admin protected routes */}
-          <Route element={<ProtectedRoutesComponenet />} >
-            <Route path='/admin/users' element={<AdminUsersPage />} />
-            <Route path='/admin/edit-user' element={<AdminEditUserPage />} />
-            <Route path='/admin/products' element={<AdminProductsPage />} />
-            <Route path='/admin/create-new-product' element={<AdminCreateProductPage />} />
-            <Route path='/admin/edit-product' element={<AdminEditProductPage />} />
-            <Route path='/admin/orders' element={<AdminOrdersPage />} />
-            <Route path='/admin/orders-details' element={<AdminOrdersDetailsPage />} />
-            <Route path='/admin/chats' element={<AdminChatsPage />} />
-            <Route path='/admin/analytics' element={<AdminAnalyticsPage />} />
-            
-        </Route>
-        
+          <Route element={<ProtectedRoutesComponenet admin={true} />}>
+            <Route path="/admin/users" element={<AdminUsersPage />} />
+            <Route path="/admin/edit-user" element={<AdminEditUserPage />} />
+            <Route path="/admin/products" element={<AdminProductsPage />} />
+            <Route
+              path="/admin/create-new-product"
+              element={<AdminCreateProductPage />}
+            />
+            <Route
+              path="/admin/edit-product"
+              element={<AdminEditProductPage />}
+            />
+            <Route path="/admin/orders" element={<AdminOrdersPage />} />
+            <Route
+              path="/admin/orders-details"
+              element={<AdminOrdersDetailsPage />}
+            />
+            <Route path="/admin/chats" element={<AdminChatsPage />} />
+            <Route path="/admin/analytics" element={<AdminAnalyticsPage />} />
+          </Route>
         </Routes>
+        <FooterComponent />
       </BrowserRouter>
     </>
   );
