@@ -3,8 +3,8 @@ import { Card, Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 
 interface CategoryCardProps {
-    category: string; // Change the type accordingly
-    idx: number;
+    category: string; 
+    idx: any;
 }
 
 const CategoryCardComponent: React.FC<CategoryCardProps> = ({ category, idx }) => {
