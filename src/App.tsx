@@ -89,7 +89,7 @@ function App() {
       </Routes>
       <FooterComponent />
     </BrowserRouter>
-  );
+  )
 }
 
 export default App;
