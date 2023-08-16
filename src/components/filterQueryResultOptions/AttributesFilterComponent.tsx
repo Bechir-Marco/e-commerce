@@ -1,14 +1,27 @@
 import { Form } from "react-bootstrap";
 
+interface AttributeData {
+  [key: string]: string[]; // Each attribute key maps to an array of strings
+}
+
 const AttributesFilterComponent = () => {
+  const attributeData: AttributeData[] = [
+    { color: ["red", "blue", "green"] },
+    { ram: ["1 TB", "2 TB"] }
+  ];
+
   return (
     <>
-      <Form.Label>Color</Form.Label>
-      <Form.Check 
-        type="checkbox"
-        id="default-checkbox"
-        label="green"
-      />
+      {attributeData.map((item, idx) => (
+        <div key={idx} className="mb-3">
+          <Form.Label>
+            <b>{Object.keys(item)[0]}</b> {/* Object.keys(item) returns an array, so [0] accesses the first key */}
+          </Form.Label>
+          {item[Object.keys(item)[0]].map((i, idx) => (
+            <Form.Check key={idx} type="checkbox" label={i} />
+          ))}
+        </div>
+      ))}
     </>
   );
 };
