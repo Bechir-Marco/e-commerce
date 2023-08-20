@@ -174,7 +174,7 @@ const AdminEditProductPage = () => {
                             <Form.Label>Images</Form.Label>
                             <Row>
                                 <Col style={{ position: "relative" }} xs={3}>
-                                    <Image src="/images/monitors-category.png" fluid />
+                                    <Image crossOrigin="anonymous" src="/images/monitors-category.png" fluid />
                                     <i style={onHover as React.CSSProperties} className="bi bi-x text-danger"></i>
                                 </Col>
                                 <Col style={{ position: "relative" }} xs={3}>
