@@ -1,6 +1,6 @@
 import  Category from "../models/CategoryModel"
 
-const getCategories = async (req, res, next) => {
+export const getCategories = async (req, res, next) => {
     try {
         const categories = await Category.find({}).sort({ name: "asc" }).orFail();
         res.json(categories);
@@ -9,7 +9,7 @@ const getCategories = async (req, res, next) => {
     }
 };
 
-const newCategory = async (req, res, next) => {
+export const newCategory = async (req, res, next) => {
     try {
         const { category } = req.body;
         if (!category) {
@@ -29,7 +29,7 @@ const newCategory = async (req, res, next) => {
     }
 };
 
-const deleteCategory = async (req, res, next) => {
+export const deleteCategory = async (req, res, next) => {
     // return res.send(req.params.category)
     try {
         if (req.params.category !== "Choose category") {
@@ -45,7 +45,7 @@ const deleteCategory = async (req, res, next) => {
     }
 };
 
-const saveAttr = async (req, res, next) => {
+export const saveAttr = async (req, res, next) => {
     const { key, val, categoryChoosen } = req.body;
     if (!key || !val || !categoryChoosen) {
         return res.status(400).send("All inputs are required");
@@ -81,4 +81,3 @@ const saveAttr = async (req, res, next) => {
     }
 };
 
-module.exports = { getCategories, newCategory, deleteCategory, saveAttr };

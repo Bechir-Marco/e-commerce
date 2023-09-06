@@ -1,17 +1,16 @@
 import express from "express";
+import connectDB from "./config/db";
+import apiRoutes from "./routes/apiRoutes";
+
+connectDB();
+
 const app = express();
 const port = 3000;
 
-import apiRoutes from "./routes/apiRoutes";
 
 app.get("/", async (req, res, next) => {
     res.json({ message: "API running..." });
 });
-
-// import the connectDB function
-import connectDB from "./config/db";
-
-connectDB();
 
 app.use("/api", apiRoutes);
 

@@ -13,15 +13,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const db_1 = __importDefault(require("./config/db"));
+const apiRoutes_1 = __importDefault(require("./routes/apiRoutes"));
+(0, db_1.default)();
 const app = (0, express_1.default)();
 const port = 3000;
-const apiRoutes_1 = __importDefault(require("./routes/apiRoutes"));
 app.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     res.json({ message: "API running..." });
 }));
-// import the connectDB function
-const db_1 = __importDefault(require("./config/db"));
-(0, db_1.default)();
 app.use("/api", apiRoutes_1.default);
 app.use((error, req, res, next) => {
     console.error(error);
