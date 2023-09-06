@@ -7,9 +7,7 @@ var categories = [
         image: "/images/tablets-category.png",
         attrs: [
             { key: "RAM", value: ["1 TB", "2 TB", "4 TB"] },
-            {
-                key: "color", value: ["blue", "red", "green", "black"]
-            },
+            { key: "color", value: ["blue", "red", "green", "black"] },
         ],
     },
     {
