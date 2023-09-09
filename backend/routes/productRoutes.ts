@@ -1,8 +1,11 @@
 import express from 'express';
 const router = express.Router()
 
-router.get("/", (req,res) => {
-    res.send("Handling product routes, e.g. search for products")
-})
+import { getProducts, getProductById } from '../controllers/productController';
+router.get("/", getProducts )
+router.get("/category/:categoryName", getProducts)
+router.get("/category/:categoryName/search/:searchQuery", getProducts)
+router.get("/search/:searchQuery", getProducts)
+router.get("/get-one/:id", getProductById)
 
 export default router;

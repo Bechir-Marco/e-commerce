@@ -46,36 +46,50 @@ export const deleteCategory = async (req, res, next) => {
 };
 
 export const saveAttr = async (req, res, next) => {
-    const { key, val, categoryChoosen } = req.body;
+    console.log(req.body);
+    const key = req.body.key;
+    const val = req.body.val;
+    const categoryChoosen = req.body.categoryChoosen;
     if (!key || !val || !categoryChoosen) {
         return res.status(400).send("All inputs are required");
     }
     try {
         const category = categoryChoosen.split("/")[0];
         const categoryExists = await Category.findOne({ name: category }).orFail();
-        if (categoryExists.attrs.length > 0) {
-            // if key exists in the database then add a value to the key
-            let keyDoesNotExistsInDatabase = true;
-            categoryExists.attrs.map((item, idx) => {
-                if (item.key === key) {
-                    keyDoesNotExistsInDatabase = false;
-                    const copyAttributeValues = [...categoryExists.attrs[idx].value];
-                    copyAttributeValues.push(val);
-                    const newAttributeValues = [...new Set(copyAttributeValues)]; // Set ensures unique values
-                    categoryExists.attrs[idx].value = newAttributeValues;
-                }
-            });
 
-            if (keyDoesNotExistsInDatabase) {
-                categoryExists.attrs.push({ key: key, value: [val] });
-            }
+        const existingAttribute = categoryExists.attrs.find((item) => item.key === key);
+
+        if (existingAttribute) {
+            const copyAttributeValues = [...existingAttribute.value];
+            copyAttributeValues.push(val);
+            existingAttribute.value = [...new Set(copyAttributeValues)]; 
         } else {
-            // push to the array
             categoryExists.attrs.push({ key: key, value: [val] });
         }
+
+        // if (categoryExists.attrs.length > 0) {
+        //     // if key exists in the database then add a value to the key
+        //     let keyDoesNotExistsInDatabase = true;
+        //     categoryExists.attrs.map((item, idx) => {
+        //         if (item.key === key) {
+        //             keyDoesNotExistsInDatabase = false;
+        //             const copyAttributeValues = [...categoryExists.attrs[idx].value];
+        //             copyAttributeValues.push(val);
+        //             const newAttributeValues = [...new Set(copyAttributeValues)]; // Set ensures unique values
+        //             categoryExists.attrs[idx].value = newAttributeValues;
+        //         }
+        //     });
+
+        //     if (keyDoesNotExistsInDatabase) {
+        //         categoryExists.attrs.push({ key: key, value: [val] });
+        //     }
+        // } else {
+        //     // push to the array
+        //     categoryExists.attrs.push({ key: key, value: [val] });
+        // }
         await categoryExists.save();
         const cat = await Category.find({}).sort({ name: "asc" });
-        return res.status(201).json({ categoriesUpdated: cat });
+        return res.status(201).json({ categoriesUpdated: cat,pAttr: existingAttribute, });
     } catch (err) {
         next(err);
     }
