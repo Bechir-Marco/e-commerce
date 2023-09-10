@@ -1,7 +1,9 @@
 import Product from "../models/ProductModel";
 import recordsPerPage from '../config/pagination'
-
-
+import imageValidate from '../utils/imageValidation'
+import * as path from "path";
+import { v4 as uuidv4 } from "uuid"
+import  fs  from "fs"
 export const getProducts = async (req, res, next) => {
     try {
         let query = {};
@@ -152,3 +154,137 @@ export const adminDeleteProduct = async (req, res, next) => {
         next(err);
     }
 };
+export const adminCreateProduct = async (req, res, next) => {
+    try {
+        const product = new Product();
+        const { name, description, count, price, category, attributesTable } =
+            req.body;
+        product.name = name;
+        product.description = description;
+        product.count = count;
+        product.price = price;
+        product.category = category;
+        if (attributesTable.length > 0) {
+            attributesTable.map((item) => {
+                product.attrs.push(item);
+            });
+        }
+        await product.save();
+
+        res.json({
+            message: "product created",
+            productId: product._id,
+        });
+    } catch (err) {
+        next(err);
+    }
+};
+export const adminUpdateProduct = async (req, res, next) => {
+        try {
+            const product = await Product.findByIdAndUpdate(req.params.id).orFail();
+            const { name, description, count, price, category, attributesTable } =
+                req.body;
+            product.name = name 
+            product.description = description 
+            product.count = count 
+            product.price = price 
+            product.category = category 
+            if (attributesTable && attributesTable.length > 0) {
+                product.attrs = [];
+                attributesTable.map((item) => {
+                    product.attrs.push(item);
+                });
+            } else {
+                product.attrs = [];
+            }
+            await product.save();
+            res.json({
+                message: "product updated",
+            });
+        } catch (err) {
+            next(err);
+        }
+};
+export const adminUpload = async (req, res, next) => {
+    if (req.query.cloudinary === "true") {
+        try {
+            const  product = await Product.findById(req.query.productId).orFail();
+            product.images.push({ path: req.body.url });
+            await product.save();
+        } catch (err) {
+            next(err);
+        }
+        return;
+    }
+    try {
+        if (!req.files || !!req.files.images === false) {
+            return res.status(400).send("No files were uploaded.");
+        }
+        const validateResult = imageValidate(req.files.images);
+        if (validateResult.error) {
+            return res.status(400).send(validateResult.error);
+        }
+        const uploadDirectory = path.resolve(
+            __dirname,
+            "../../frontend",
+            "public",
+            "images",
+            "products"
+        );
+
+        const product = await Product.findById(req.query.productId).orFail();
+
+        let imagesTable = [];
+        if (Array.isArray(req.files.images)) {
+            imagesTable = req.files.images;
+        } else {
+            imagesTable.push(req.files.images);
+        }
+
+        for (const image of imagesTable) {
+            const fileName = uuidv4() + path.extname(image.name);
+            const uploadPath = uploadDirectory + "/" + fileName;
+        
+            product.images.push({ path: "/images/products/" + fileName });
+            image.mv(uploadPath, function (err) {
+                if (err) {
+                    return res.status(500).send(err);
+                }
+            });
+        }
+        await product.save();
+        return res.send("Files uploaded!");
+    } catch (err) {
+        next(err);
+    }
+};
+export const adminDeleteProductImage = async (req, res, next) => {
+    const imagePath = decodeURIComponent(req.params.imagePath);
+    if (req.query.cloudinary === "true") {
+        try {
+            await Product.findOneAndUpdate({ _id: req.params.productId }, { $pull: { images: { path: imagePath } } }).orFail();
+            return res.end();
+        } catch (er) {
+            next(er);
+        }
+        return;
+    }
+    try {
+        
+        const finalPath = path.resolve("../frontend/public") + imagePath;
+
+        
+        fs.unlink(finalPath, (err) => {
+            if (err) {
+                res.status(500).send(err);
+            }
+        });
+        await Product.findOneAndUpdate(
+            { _id: req.params.productId },
+            { $pull: { images: { path: imagePath } } }
+        ).orFail();
+        return res.end();
+    } catch (err) {
+        next(err);
+    }
+}
