@@ -35,11 +35,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.adminUpload = exports.adminUpdateProduct = exports.adminCreateProduct = exports.adminDeleteProduct = exports.adminGetProducts = exports.getBestsellers = exports.getProductById = exports.getProducts = void 0;
+exports.adminDeleteProductImage = exports.adminUpload = exports.adminUpdateProduct = exports.adminCreateProduct = exports.adminDeleteProduct = exports.adminGetProducts = exports.getBestsellers = exports.getProductById = exports.getProducts = void 0;
 const ProductModel_1 = __importDefault(require("../models/ProductModel"));
 const pagination_1 = __importDefault(require("../config/pagination"));
 const imageValidation_1 = __importDefault(require("../utils/imageValidation"));
 const path = __importStar(require("path"));
+const uuid_1 = require("uuid");
+const fs_1 = __importDefault(require("fs"));
 const getProducts = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let query = {};
@@ -269,7 +271,6 @@ const adminUpload = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         if (validateResult.error) {
             return res.status(400).send(validateResult.error);
         }
-        const { v4: uuidv4 } = require("uuid");
         const uploadDirectory = path.resolve(__dirname, "../../frontend", "public", "images", "products");
         const product = yield ProductModel_1.default.findById(req.query.productId).orFail();
         let imagesTable = [];
@@ -279,9 +280,9 @@ const adminUpload = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         else {
             imagesTable.push(req.files.images);
         }
-        for (let image of imagesTable) {
-            var fileName = uuidv4() + path.extname(image.name);
-            var uploadPath = uploadDirectory + "/" + fileName;
+        for (const image of imagesTable) {
+            const fileName = (0, uuid_1.v4)() + path.extname(image.name);
+            const uploadPath = uploadDirectory + "/" + fileName;
             product.images.push({ path: "/images/products/" + fileName });
             image.mv(uploadPath, function (err) {
                 if (err) {
@@ -297,4 +298,31 @@ const adminUpload = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.adminUpload = adminUpload;
+const adminDeleteProductImage = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const imagePath = decodeURIComponent(req.params.imagePath);
+    if (req.query.cloudinary === "true") {
+        try {
+            yield ProductModel_1.default.findOneAndUpdate({ _id: req.params.productId }, { $pull: { images: { path: imagePath } } }).orFail();
+            return res.end();
+        }
+        catch (er) {
+            next(er);
+        }
+        return;
+    }
+    try {
+        const finalPath = path.resolve("../frontend/public") + imagePath;
+        fs_1.default.unlink(finalPath, (err) => {
+            if (err) {
+                res.status(500).send(err);
+            }
+        });
+        yield ProductModel_1.default.findOneAndUpdate({ _id: req.params.productId }, { $pull: { images: { path: imagePath } } }).orFail();
+        return res.end();
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.adminDeleteProductImage = adminDeleteProductImage;
 //# sourceMappingURL=productController.js.map

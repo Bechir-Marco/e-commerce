@@ -17,5 +17,6 @@ router.delete("/admin/:id", productController_1.adminDeleteProduct);
 router.post("/admin", productController_1.adminCreateProduct);
 router.put("/admin/:id", productController_1.adminUpdateProduct);
 router.post("/admin/upload", productController_1.adminUpload);
+router.delete("/admin/image/:imagePath/:productId", productController_1.adminDeleteProductImage);
 exports.default = router;
 //# sourceMappingURL=productRoutes.js.map

@@ -2,6 +2,7 @@ import express from "express";
 import connectDB from "./config/db";
 import apiRoutes from "./routes/apiRoutes";
 import fileUpload from "express-fileupload"
+import cookieParser from "cookie-parser";
 connectDB();
 
 const app = express();
@@ -9,6 +10,7 @@ const port = 3000;
 
 app.use(express.json()); // Parse JSON request bodies
 app.use(fileUpload())
+app.use(cookieParser())
 
 app.get("/", async (req, res, next) => {
     res.json({ message: "API running..." });

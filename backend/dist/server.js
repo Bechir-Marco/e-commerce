@@ -20,7 +20,7 @@ const express_fileupload_1 = __importDefault(require("express-fileupload"));
 const app = (0, express_1.default)();
 const port = 3000;
 app.use(express_1.default.json()); // Parse JSON request bodies
-app.use(express_fileupload_1.default);
+app.use((0, express_fileupload_1.default)());
 app.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     res.json({ message: "API running..." });
 }));
