@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
 import Review from "./ReviewModel";
 
+
+
+
 const imageSchema = new mongoose.Schema({
     path: { type: String, required: true }
 });

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import User from "./UserModel";
 
 const reviewSchema = new mongoose.Schema({
     comment: {
@@ -10,8 +11,8 @@ const reviewSchema = new mongoose.Schema({
         required: true,
     },
     user: {
-        _id: { type: mongoose.Schema.Types.ObjectId, required: true },
-        name: { type: String, required: true },
+         type: mongoose.Schema.Types.ObjectId,
+        ref: User,
     },
 }, {
     timestamps: true,

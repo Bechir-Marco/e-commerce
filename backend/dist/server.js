@@ -16,11 +16,13 @@ const express_1 = __importDefault(require("express"));
 const db_1 = __importDefault(require("./config/db"));
 const apiRoutes_1 = __importDefault(require("./routes/apiRoutes"));
 const express_fileupload_1 = __importDefault(require("express-fileupload"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 (0, db_1.default)();
 const app = (0, express_1.default)();
 const port = 3000;
 app.use(express_1.default.json()); // Parse JSON request bodies
 app.use((0, express_fileupload_1.default)());
+app.use((0, cookie_parser_1.default)());
 app.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     res.json({ message: "API running..." });
 }));

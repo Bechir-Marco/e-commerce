@@ -5,6 +5,7 @@ import { getCategories, newCategory, deleteCategory, saveAttr } from "../control
 import { verifyIsLoggedIn, verifyIsAdmin } from '../middleWare/verifyAuthToken'
 
 router.get("/", getCategories);
+
 /******Admin Routes ********/
 router.use(verifyIsLoggedIn);
 router.use(verifyIsAdmin);
