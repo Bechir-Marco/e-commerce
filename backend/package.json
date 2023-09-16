@@ -4,8 +4,12 @@
   "description": "",
   "main": "dist/server.js",
   "scripts": {
-    "start": "tsc && nodemon server.ts",
-    "lint": "eslint . --ext .ts"
+    "server-prod": "node dist/server.js",
+    "server-dev": "tsc && nodemon server.ts",
+    "client": "npm start --prefix ../frontend",
+    "dev": " concurrently --kill-others-on-fail \"npm run server-dev\" \"npm run client\"",
+    "seed:data": "node seeder/seeder",
+    "seed:data-d": "node seeder/seeder -d"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +18,7 @@
     "@types/express": "^4.17.17",
     "@typescript-eslint/eslint-plugin": "^6.4.0",
     "@typescript-eslint/parser": "^6.4.0",
+    "concurrently": "^8.2.1",
     "eslint": "^8.47.0",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",

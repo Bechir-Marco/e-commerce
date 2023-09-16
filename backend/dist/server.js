@@ -19,7 +19,7 @@ const express_fileupload_1 = __importDefault(require("express-fileupload"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 (0, db_1.default)();
 const app = (0, express_1.default)();
-const port = 3000;
+const port = 5000;
 app.use(express_1.default.json()); // Parse JSON request bodies
 app.use((0, express_fileupload_1.default)());
 app.use((0, cookie_parser_1.default)());
@@ -28,14 +28,23 @@ app.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
 }));
 app.use("/api", apiRoutes_1.default);
 app.use((error, req, res, next) => {
-    console.error(error);
+    if (process.env.NODE_ENV === "development") {
+        console.error(error);
+    }
     next(error);
 });
 app.use((error, req, res, next) => {
-    res.status(500).json({
-        message: error.message,
-        stack: error.stack,
-    });
+    if (process.env.NODE_ENV === "development") {
+        res.status(500).json({
+            message: error.message,
+            stack: error.stack,
+        });
+    }
+    else {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
 });
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
