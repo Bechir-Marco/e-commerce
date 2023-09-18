@@ -21,20 +21,22 @@ const CartItemComponent: React.FC<CartItemProps> = ({
     <ListGroup.Item>
       <Row>
         <Col md={2}>
-          <Image
-            crossOrigin="anonymous"
-            src={item?.image?.path}
-            fluid
-          />
+          <Image crossOrigin="anonymous" src={item?.image?.path} fluid />
         </Col>
         <Col md={2}>{item?.name}</Col>
         <Col md={2}>
-          <b>{item?.price}</b>
+          <b>${item?.price}</b>
         </Col>
         <Col md={3}>
-          <Form.Select disabled={orderCreated} value={item?.quantity}>
-            {[...Array(item?.count).keys()].map((x) => (
-              <option value={x + 1}>{x + 1}</option>
+          <Form.Select
+            onChange={() => {}}
+            disabled={orderCreated}
+            value={item?.quantity}
+          >
+            {[...Array(item?.count).keys()].map((x, idx) => (
+              <option key={idx} value={x + 1}>
+                {x + 1}
+              </option>
             ))}
           </Form.Select>
         </Col>

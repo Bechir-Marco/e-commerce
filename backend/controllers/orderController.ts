@@ -31,8 +31,9 @@ export const createOrder = async (req, res, next) => {
         const qty = cartItems.map((item) => {
             return Number(item.quantity);
         });
-
+        console.log(ids);
         await Product.find({ _id: { $in: ids } }).then((products) => {
+            console.log(products);
             products.forEach(function (product, idx) {
                 product.sales += qty[idx];
                 product.save();
