@@ -1,16 +1,30 @@
 import { Container, Row, Col, Form, Button, Alert } from 'react-bootstrap';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link , useNavigate} from 'react-router-dom';
 import Spinner from 'react-bootstrap/Spinner';
 
 type LoginPageComponentProps = {
-  loginUserApiRequest(email: any, password :any, doNotLogout:any): Promise<any>;
-  
+  loginUserApiRequest(
+    email: any,
+    password: any,
+    doNotLogout: any
+  ): Promise<any>;
+  reduxDispatch(action:any): any;
+  setReduxUserState(action:any): any;
 };
 const LoginPageComponent: React.FC<LoginPageComponentProps> = ({
   loginUserApiRequest,
+  reduxDispatch,
+  setReduxUserState,
 }) => {
   const [validated, setValidated] = useState(false);
+  const [loginUserResponseState, setLoginUserResponseState] = useState({
+    success: '',
+    error: '',
+    loading: false,
+  });
+  useEffect(() => {}, [loginUserResponseState]);
+  const navigate = useNavigate();
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
@@ -20,12 +34,28 @@ const LoginPageComponent: React.FC<LoginPageComponentProps> = ({
     const password = form.password.value;
     const doNotLogout = form.doNotLogout.checked;
     if (event.currentTarget.checkValidity() === true && email && password) {
+      setLoginUserResponseState({ success: '', error: '', loading: true });
       loginUserApiRequest(email, password, doNotLogout)
-        .then((res: any) => {
-          console.log('res', res);
+        .then((res) => {
+          setLoginUserResponseState({
+            success: res.success,
+            loading: false,
+            error: '',
+          });
+          if (res.userLoggedIn) {
+            reduxDispatch(setReduxUserState(res.userLoggedIn));
+          }
+
+          if (res.success === 'user logged in' && !res.userLoggedIn.isAdmin) {
+            navigate('/user', { replace: true });
+          } else navigate('/admin/orders', { replace: true });
         })
-        .catch((err: any) => {
-          console.log(err);
+        .catch((er) => {
+          console.log(er.response);
+          setLoginUserResponseState((prevState) => ({
+            ...prevState,
+            error: er.response,
+          }));
         });
     }
 
@@ -71,16 +101,27 @@ const LoginPageComponent: React.FC<LoginPageComponentProps> = ({
             </Row>
 
             <Button variant="primary" type="submit">
-              <Spinner
-                as="span"
-                animation="border"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-              />
+              {loginUserResponseState &&
+              loginUserResponseState.loading === true ? (
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />
+              ) : (
+                ''
+              )}
               Login
             </Button>
-            <Alert show={true} variant="danger">
+            <Alert
+              show={
+                loginUserResponseState &&
+                loginUserResponseState.error === 'wrong credentials'
+              }
+              variant="danger"
+            >
               Wrong credentials
             </Alert>
           </Form>
