@@ -47,8 +47,8 @@ const LoginPageComponent: React.FC<LoginPageComponentProps> = ({
           }
 
           if (res.success === 'user logged in' && !res.userLoggedIn.isAdmin) {
-            navigate('/user', { replace: true });
-          } else navigate('/admin/orders', { replace: true });
+            window.location.assign('/user'); 
+          } else window.location.assign('/admin/orders');
         })
         .catch((er) => {
           console.log(er.response);

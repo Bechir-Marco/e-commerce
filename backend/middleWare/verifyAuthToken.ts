@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken"; 
  const verifyIsLoggedIn = (req, res, next) => {
-    next()
-    return
+    
     try {
         const token = req.cookies.access_token;
         if (!token) {
@@ -21,8 +20,7 @@ import jwt from "jsonwebtoken";
     }
 };
 const verifyIsAdmin = (req, res, next) => {
-    next();
-    return
+    
     if (req.user && req.user.isAdmin) {
         next();
     } else {
