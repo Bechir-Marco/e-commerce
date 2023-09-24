@@ -2,9 +2,11 @@ import { Row, Col, Table, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import AdminLinksComponent from '../../../components/admin/AdminLinksComponent';
 import { useState, useEffect } from 'react';
+import { logout } from '../../../redux/actions/userActions';
+import { useDispatch } from 'react-redux';
 
 type UsersPageComponentProps = {
-  fetchUsers: (a: any) => Promise<any>;
+  fetchUsers: () => Promise<any>;
   deleteUser :(userId:any) => Promise<any>;
 };
 type User = {
@@ -19,29 +21,31 @@ const UsersPageComponent: React.FC<UsersPageComponentProps> = ({
   deleteUser,
 }) => {
   const [users, setUsers] = useState<User[]>([]);
-    const [userDeleted, setUserDeleted] = useState(false);
+  const [userDeleted, setUserDeleted] = useState(false);
+  const dispatch = useDispatch()<any>;
 
-  const deleteHandler =  async (userId: any) => {
+  const deleteHandler = async (userId: any) => {
     if (window.confirm('Are you sure?')) {
       const data = await deleteUser(userId);
       if (data === 'user removed') {
-        setUserDeleted(!userDeleted)
+        setUserDeleted(!userDeleted);
       }
     }
   };
 
   useEffect(() => {
-    const abctrl = new AbortController();
-    fetchUsers(abctrl)
-      .then((data: any) => setUsers(data))
-      .catch((err) => {
-        console.log(err.response ? err.response : err.message);
-        console.log('msg', err.message);
-        console.log('err', err);
-      });
-
-    return () => abctrl.abort();
-  }, [userDeleted]);
+    const fetchData = async () => {
+      try {
+        const response = await fetchUsers();
+        setUsers(response);
+        
+      } catch (error) {
+        
+        dispatch(logout());
+      }
+    }
+      fetchData();
+    }, [userDeleted]);
 
   return (
     <Row className="m-5">

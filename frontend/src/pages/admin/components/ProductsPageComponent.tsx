@@ -1,10 +1,12 @@
 import { Row, Col, Table, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import AdminLinksComponent from '../../../components/admin/AdminLinksComponent';
+import { logout } from '../../../redux/actions/userActions';
 
 import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 type ProductsPageComponentProps  = {
-    fetchProducts(a: any): Promise<any>;
+    fetchProducts(): Promise<any>;
     deleteProduct(productId: any): Promise<any>;
 }
 type Product = {
@@ -18,7 +20,8 @@ const ProductsPageComponent: React.FC<ProductsPageComponentProps> = ({
 }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [productDeleted, setProductDeleted] = useState(false);
-  
+    const dispatch = useDispatch()<any>;
+
 
   const deleteHandler = async (productId:any) => {
     if (window.confirm('Are you sure?')) {
@@ -30,18 +33,33 @@ const ProductsPageComponent: React.FC<ProductsPageComponentProps> = ({
     }
   };
 
-  useEffect(() => {
-    const abctrl = new AbortController();
-    fetchProducts(abctrl)
-      .then((res) => setProducts(res))
-      .catch(
-        (er) => console.log(er)
-        // setProducts([
-        //   {name: er.response.data.message ? er.response.data.message : er.response.data}
-        // ])
-      );
-    return () => abctrl.abort();
-  }, [productDeleted]);
+useEffect(() => {
+  // const abctrl = new AbortController();
+  const fetchData = async () => {
+
+    try {
+      const response = await fetchProducts();
+      console.log('Received products:', response);
+      setProducts(response);
+    } catch (error) {
+      
+        // Handle other errors here
+        console.error('Error fetching products:', error);
+        dispatch(logout());
+      
+    }
+  };
+
+  fetchData();
+
+  // return () => {
+  //   // Cleanup function remains the same
+  //   abctrl.abort();
+  // };
+}, [productDeleted]);
+
+
+
 
   return (
     <Row className="m-5">

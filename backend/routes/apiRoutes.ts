@@ -4,8 +4,13 @@ import productRoutes from "./productRoutes";
 import userRoutes from "./userRoutes";
 import categoryRoutes from './categoryRoutes'
 import orderRoutes from "./orderRoutes";
-
 import jwt from "jsonwebtoken";
+
+
+app.get("/logout", (req, res) => {
+    return res.clearCookie("access_token").send("access token cleared");
+});
+
 
 app.get("/get-token", (req, res) => {
     try {

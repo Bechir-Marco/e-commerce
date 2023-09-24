@@ -24,17 +24,16 @@ const ProtectedRoutesComponent: React.FC<ProtectedRoutesProps> = ({
   }, [isAuth]);
 
   if (isAuth === undefined) {
+    console.log('1');
   return <LoginPage/>;
 }
 
 else if (isAuth  && admin) {
-  // Authenticated admin users can access the protected content.
-  return <Outlet />;
+    console.log('2');
+    return <Outlet />;
 }
-else 
-if (isAuth  && !admin) {
-  // Non-admin users with 'admin' as isAuth are redirected to the login page.
-  return (
+else if (isAuth  && !admin) {
+console.log('3');  return (
     <>
       <UserChatComponent />
       <Outlet />

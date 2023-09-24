@@ -8,13 +8,16 @@ import {
   Button,
 } from 'react-bootstrap';
 import CartItemComponent from '../../../components/CartItemComponent';
-
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Order } from './OrdersPageComponent';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../../redux/actions/userActions';
+
 type OrdersDetailsPageComponentProps = {
-    getOrder(id: any): Promise<any>;
-    markAsDelivered(id: any): Promise<any>;
+  getOrder(id: any): Promise<any>;
+  markAsDelivered(id: any): Promise<any>;
+  
 };
 type OrderDetails = {
   
@@ -27,9 +30,11 @@ type OrderDetails = {
     state : string,
   order : Order
 };
+
 const OrderDetailsPageComponent: React.FC<OrdersDetailsPageComponentProps> = ({
   getOrder,
   markAsDelivered,
+  
 }) => {
   const { id } = useParams();
 
@@ -42,6 +47,7 @@ const OrderDetailsPageComponent: React.FC<OrdersDetailsPageComponentProps> = ({
   const [orderButtonMessage, setOrderButtonMessage] =
     useState('Mark as delivered');
   const [cartItems, setCartItems] = useState([]);
+  const dispatch = useDispatch()<any>;
 
   useEffect(() => {
     getOrder(id)
@@ -59,12 +65,10 @@ const OrderDetailsPageComponent: React.FC<OrdersDetailsPageComponentProps> = ({
         }
         setCartItems(order.cartItems);
       })
-      .catch(
-        (er) => console.log(er)
-        // console.log(
-        //   er.response.data.message ? er.response.data.message : er.response.data
-        // )
-      );
+      .catch((er) => {
+        console.log(er);
+        dispatch(logout());
+      });
   }, [isDelivered, id]);
   return (
     <Container fluid>
@@ -146,12 +150,7 @@ const OrderDetailsPageComponent: React.FC<OrdersDetailsPageComponentProps> = ({
                           setIsDelivered(true);
                         }
                       })
-                      .catch((er) =>
-                        console.log(
-                          er.message
-                           
-                        )
-                      )
+                      .catch((er) => console.log(er.message))
                   }
                   disabled={buttonDisabled}
                   variant="danger"

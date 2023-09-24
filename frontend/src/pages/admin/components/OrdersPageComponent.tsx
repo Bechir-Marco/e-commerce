@@ -2,6 +2,8 @@ import { Row, Col, Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import AdminLinksComponent from '../../../components/admin/AdminLinksComponent';
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../../redux/actions/userActions';
 
 type OrdersPageComponentProps = {
     getOrders(): Promise<any>;
@@ -31,15 +33,15 @@ export type { Order };
   
 const OrdersPageComponent: React.FC<OrdersPageComponentProps> = ({getOrders})  => {
   const [orders, setOrders] = useState<Order[]>([]);
-
+const dispatch = useDispatch()<any>;
   useEffect(() => {
     getOrders()
       .then((orders) => setOrders(orders))
       .catch(
-        (er) => console.log(er)
-        // console.log(
-        //   er.response.data.message ? er.response.data.message : er.response.data
-        // )
+        (er) => {
+          console.log(er);
+          dispatch(logout());
+        }
       );
   }, []);
 console.log(orders);
