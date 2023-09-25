@@ -24,7 +24,8 @@ const RegisterPageComponent: React.FC<RegisterPageComponentProps> = ({
    error: '',
    loading: false,
  });
- const [passwordsMatchState, setPasswordsMatchState] = useState(true);
+  const [passwordsMatchState, setPasswordsMatchState] = useState(true);
+  
   const onChange = () => {
     const password = document.querySelector(
       'input[name=password]'
@@ -33,9 +34,10 @@ const RegisterPageComponent: React.FC<RegisterPageComponentProps> = ({
       'input[name=confirmPassword]'
     ) as HTMLInputElement;
     if (confirm.value === password.value) {
-      confirm.setCustomValidity('');
+      setPasswordsMatchState(true)
+      
     } else {
-      confirm.setCustomValidity('Passwords do not match');
+      setPasswordsMatchState(false);
     }
   };
 
@@ -64,6 +66,7 @@ const RegisterPageComponent: React.FC<RegisterPageComponentProps> = ({
             error: '',
           });
           reduxDispatch(setReduxUserState(data.userCreated));
+
         })
         .catch((er) =>
           setRegisterUserResponseState({
@@ -128,6 +131,7 @@ const RegisterPageComponent: React.FC<RegisterPageComponentProps> = ({
                 placeholder="Password"
                 minLength={6}
                 onChange={onChange}
+                isInvalid={!passwordsMatchState}
               />
               <Form.Control.Feedback type="invalid">
                 Please anter a valid password
@@ -145,6 +149,7 @@ const RegisterPageComponent: React.FC<RegisterPageComponentProps> = ({
                 placeholder="Repeat Password"
                 minLength={6}
                 onChange={onChange}
+                isInvalid={!passwordsMatchState}
               />
               <Form.Control.Feedback type="invalid">
                 Both passwords should match
@@ -159,19 +164,36 @@ const RegisterPageComponent: React.FC<RegisterPageComponentProps> = ({
             </Row>
 
             <Button type="submit">
-              <Spinner
-                as="span"
-                animation="border"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-              />
+              {registerUserResponseState &&
+              registerUserResponseState.loading === true ? (
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />
+              ) : (
+                ''
+              )}
               Submit
             </Button>
-            <Alert show={true} variant="danger">
+            <Alert
+              show={
+                registerUserResponseState &&
+                registerUserResponseState.error === 'user exists'
+              }
+              variant="danger"
+            >
               User with that email already exists!
             </Alert>
-            <Alert show={true} variant="info">
+            <Alert
+              show={
+                registerUserResponseState &&
+                registerUserResponseState.success === 'User created'
+              }
+              variant="info"
+            >
               User created
             </Alert>
           </Form>

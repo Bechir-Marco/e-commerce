@@ -1,4 +1,4 @@
-import { AnyAction, Dispatch } from 'redux';
+import {  Dispatch } from 'redux';
 import { LOGIN_USER, LOGOUT_USER } from '../constants/userConstants';
 import axios from 'axios';
 
@@ -9,7 +9,7 @@ export const setReduxUserState = (userCreated:any) => (dispatch:any) => {
     });
 };
 
-export const logout = () =>  (dispatch: Dispatch) => {
+export const logout = () =>  (dispatch:any) => {
     document.location.href = "/login";
     axios.get('/api/logout');
     localStorage.removeItem("userInfo");

@@ -6,13 +6,19 @@ import { userRegisterLoginReducer } from "./reducers/userReducers";
 
 const reducer = combineReducers({
   cart: counterReducer,
-  userRegisterLoginReducer : userRegisterLoginReducer
+  userRegisterLogin: userRegisterLoginReducer
 })
-const userInfoInLocalStorage = localStorage.getItem("userInfo") 
-  ? JSON.parse(localStorage.getItem("userInfo") || '{}')
-  : sessionStorage.getItem("userInfo")
-    ? JSON.parse(sessionStorage.getItem("userInfo")|| '{}')
-    : {};
+let userInfoInLocalStorage = {};
+
+const localUserInfo = localStorage.getItem("userInfo");
+const sessionUserInfo = sessionStorage.getItem("userInfo");
+
+if (localUserInfo) {
+  userInfoInLocalStorage = JSON.parse(localUserInfo);
+} else if (sessionUserInfo) {
+  userInfoInLocalStorage = JSON.parse(sessionUserInfo);
+}
+
 
 const INITIAL_STATE = {
   cart: {
