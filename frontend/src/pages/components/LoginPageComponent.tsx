@@ -55,8 +55,10 @@ const LoginPageComponent: React.FC<LoginPageComponentProps> = ({
           console.log(er.response);
           setLoginUserResponseState((prevState) => ({
             ...prevState,
-            error: er.response,
+            error: er.response.data,
           }));
+          navigate('/login')
+          
         });
     }
 

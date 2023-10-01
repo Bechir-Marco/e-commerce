@@ -1,8 +1,15 @@
-import { Form } from "react-bootstrap";
+import { Form } from 'react-bootstrap';
 
-const SortOptionsComponent = () => {
+type SortOptionsProps = {
+  setSortOption: (sortOption: string) => void;
+};
+
+const SortOptionsComponent = ({ setSortOption }: SortOptionsProps) => {
   return (
-    <Form.Select aria-label="Default select example">
+    <Form.Select
+      onChange={(e) => setSortOption(e.target.value)}
+      aria-label="Default select example"
+    >
       <option>SORT BY</option>
       <option value="price_1">Price: Low To High</option>
       <option value="price_-1">Price: High To Low</option>
@@ -14,4 +21,3 @@ const SortOptionsComponent = () => {
 };
 
 export default SortOptionsComponent;
-

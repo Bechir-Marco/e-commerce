@@ -1,6 +1,17 @@
 import { Pagination } from "react-bootstrap";
+type PaginationComponentProps = {
+  categoryName: any;
+  searchQuery: any;
+  paginationLinksNumber: any;
+  pageNum: any;
+};
 
-const PaginationComponent = () => {
+const PaginationComponent = ({
+  categoryName,
+  searchQuery,
+  paginationLinksNumber,
+  pageNum,
+}: PaginationComponentProps) => {
   return (
     <Pagination>
       <Pagination.Prev />
