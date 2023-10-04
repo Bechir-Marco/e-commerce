@@ -27,7 +27,7 @@ const ProductListPageComponent = ({
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [attrsFilter, setAttrsFilter] = useState([]); 
+  const [attrsFilter, setAttrsFilter] = useState<any>([]); 
   const [attrsFromFilter, setAttrsFromFilter] = useState([]); 
   const [showResetFiltersButton, setShowResetFiltersButton] = useState(false);
 
@@ -36,7 +36,7 @@ const ProductListPageComponent = ({
   const [ratingsFromFilter, setRatingsFromFilter] = useState({});
   const [categoriesFromFilter, setCategoriesFromFilter] = useState({});
   const [sortOption, setSortOption] = useState('');
-  const [paginationLinksNumber, setPaginationLinksNumber] = useState(null);
+  const [paginationLinksNumber, setPaginationLinksNumber] = useState<number | null | undefined >();
   const [pageNum, setPageNum] = useState(null);
 
   const { categoryName } = useParams() || '';
@@ -171,7 +171,9 @@ const ProductListPageComponent = ({
               />
             ))
           )}
-          {paginationLinksNumber > 1 ? (
+          {paginationLinksNumber !== null &&
+          paginationLinksNumber !== undefined &&
+          paginationLinksNumber > 1 ? (
             <PaginationComponent
               categoryName={categoryName}
               searchQuery={searchQuery}

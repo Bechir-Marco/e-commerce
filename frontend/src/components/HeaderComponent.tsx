@@ -19,6 +19,7 @@ import { Link } from "react-router-dom";
 const HeaderComponent = () => {
   const dispatch = useDispatch()<any>;
   const {userInfo} = useSelector((state: any) => state.userRegisterLogin);
+  const itemsCount = useSelector((state:any) => state.cart.itemsCount);
 
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -44,9 +45,7 @@ const HeaderComponent = () => {
           <Nav>
             {userInfo.isAdmin ? (
               <LinkContainer to="/admin/orders">
-                <Nav.Link>
-                  Admin
-                </Nav.Link>
+                <Nav.Link>Admin</Nav.Link>
               </LinkContainer>
             ) : userInfo.name && !userInfo.isAdmin ? (
               <NavDropdown
@@ -81,7 +80,7 @@ const HeaderComponent = () => {
             <LinkContainer to="/cart">
               <Nav.Link>
                 <Badge pill bg="danger">
-                  2
+                  {itemsCount === 0 ? '' : itemsCount}
                 </Badge>
                 <i className="bi bi-cart-dash"></i>
                 <span className="ms-1">CART</span>
