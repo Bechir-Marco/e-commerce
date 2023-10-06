@@ -116,8 +116,21 @@ const OrderDetailsPageComponent: React.FC<OrdersDetailsPageComponentProps> = ({
           <br />
           <h2>Order items</h2>
           <ListGroup variant="flush">
-            {cartItems.map((item, idx) => (
-              <CartItemComponent key={idx} item={item} orderCreated={true} />
+            {Array.from({ length: 3 }).map((item, idx) => (
+              <CartItemComponent
+                item={{
+                  image: { path: '/images/tablets-category.png' },
+                  name: 'Product name',
+                  productID: idx,
+                  price: 10,
+                  count: 10,
+                  quantity: 10,
+                }}
+                key={idx}
+                orderCreated={false}
+                removeFromCartHandler={() => {}}
+                changeCount={() => {}}
+              />
             ))}
           </ListGroup>
         </Col>
