@@ -7,7 +7,7 @@ type CategoryFilterComponentProps = {
 };
 
 const CategoryFilterComponent = ({ setCategoriesFromFilter }:CategoryFilterComponentProps) => {
-  const { categories } = useSelector((state:any) => state.getCategories);
+  const { categories } = useSelector((state:any) => state.getCategories || {categories : []});
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   const myRefs = useRef<HTMLInputElement[]>([]);

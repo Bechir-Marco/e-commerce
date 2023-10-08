@@ -15,8 +15,11 @@ const loadPayPalScript = (
   orderId: any,
   updateStateAfterOrder: (arg:any)=>void
 ) : void => {
-  loadScript({ 'client-id': 'your PayPal client id' })
-    .then((paypal :any) => {
+  loadScript({
+    'client-id':
+      'AVkIoZU_GzbqBJ8xIPU4AZ9FJobym2tw2k9SS-3sBvCgGluwY9LMYpebKrUT1wmJgMcWlS6q-Broo2q5',
+  })
+    .then((paypal: any) => {
       paypal
         .Buttons(
           buttons(cartSubtotal, cartItems, orderId, updateStateAfterOrder)
@@ -28,7 +31,7 @@ const loadPayPalScript = (
     });
 };
 
-const buttons = (cartSubtotal: number, cartItems: any[], orderId: number, updateStateAfterOrder: (arg0: any) => void) => {
+const buttons = (cartSubtotal: number, cartItems: any[], orderId: number, updateStateAfterOrder: (arg0: any) => any) => {
   return {
     createOrder: function (data:any, actions:any) {
       return actions.order.create({

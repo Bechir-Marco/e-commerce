@@ -18,7 +18,8 @@ type ProductPageComponentProps = {
     filters?: {},
     sortOption?: string
   ) => Promise<any>;
-categories :any};
+  categories: any;
+};
 
 const ProductListPageComponent = ({
   getProducts,

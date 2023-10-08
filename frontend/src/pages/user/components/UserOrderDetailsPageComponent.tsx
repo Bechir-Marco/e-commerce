@@ -15,7 +15,7 @@ type UserOrderDetailsPageComponentProps = {
   userInfo: any;
   getUser(): Promise<any>;
   getOrder(id: any): Promise<any>;
-  loadPayPalScript(a: any, b: any, c: any, updateStateAfterOrder : (paidAt: any) => void) : void
+  loadPayPalScript(a: any, b: any, c: any, updateStateAfterOrder : (paidAt: any) => any) : any
   
 };
 const UserOrderDetailsPageComponent = ({

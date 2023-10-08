@@ -57,7 +57,7 @@ const getProducts = async (
 
 
 const ProductListPage = () => {
-      const { categories } = useSelector((state:any) => state.getCategories);
+      const { categories } = useSelector((state:any) => state.getCategories || []);
 
   return (
     <ProductListPageComponent
