@@ -13,14 +13,48 @@ import {
 import { logout } from '../redux/actions/userActions';
 import { useDispatch, useSelector } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { getCategories } from '../redux/actions/categoryActions';
 
 const HeaderComponent = () => {
   const dispatch = useDispatch()<any>;
-  const {userInfo} = useSelector((state: any) => state.userRegisterLogin);
-  const itemsCount = useSelector((state:any) => state.cart.itemsCount);
+  const navigate = useNavigate();
 
+ const { userInfo } = useSelector((state:any) => state.userRegisterLogin);
+ const itemsCount = useSelector((state:any) => state.cart.itemsCount);
+ const { categories } = useSelector((state:any) => state.getCategories);
+ 
+
+ const [searchCategoryToggle, setSearchCategoryToggle] = useState('All');
+ const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    dispatch(getCategories());
+  }, [dispatch]);
+
+  const submitHandler = (e:any) => {
+    if (e.keyCode && e.keyCode !== 13) return;
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      if (searchCategoryToggle === 'All') {
+        navigate(`/product-list/search/${searchQuery}`);
+      } else {
+        navigate(
+          `/product-list/category/${searchCategoryToggle.replaceAll(
+            '/',
+            ','
+          )}/search/${searchQuery}`
+        );
+      }
+    } else if (searchCategoryToggle !== 'All') {
+      navigate(
+        `/product-list/category/${searchCategoryToggle.replaceAll('/', ',')}`
+      );
+    } else {
+      navigate('/product-list');
+    }
+  };
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       <Container>
