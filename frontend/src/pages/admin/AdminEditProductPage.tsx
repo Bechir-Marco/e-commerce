@@ -28,16 +28,25 @@ const AdminEditProductPage = () => {
   const reduxDispatch = useDispatch();
 
   const imageDeleteHandler = async (imagePath:any, productId:any) => {
-    let encoded = encodeURIComponent(imagePath);
-    if (process.env.NODE_ENV !== 'production') {
-      // to do: change to !==
-      await axios.delete(`/api/products/admin/image/${encoded}/${productId}`);
-    } else {
-      await axios.delete(
-        `/api/products/admin/image/${encoded}/${productId}?cloudinary=true`
-      );
+    try {
+      let encoded = encodeURIComponent(imagePath);
+
+      if (process.env.NODE_ENV !== 'production') {
+        await axios.delete(`/api/products/admin/image/${encoded}/${productId}`);
+      } else {
+        await axios.delete(
+          `/api/products/admin/image/${encoded}/${productId}?cloudinary=true`
+        );
+      }
+
+      // La suppression a réussi, vous pouvez effectuer des actions supplémentaires si nécessaire.
+    } catch (error) {
+      // Gérer l'erreur ici
+      console.error("Erreur lors de la suppression de l'image:", error);
+      // Vous pouvez afficher un message d'erreur ou effectuer d'autres actions d'erreur
     }
   };
+
 
   return (
     <EditProductPageComponent

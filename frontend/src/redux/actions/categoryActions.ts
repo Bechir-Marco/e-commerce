@@ -3,12 +3,19 @@ import * as actionTypes from "../constants/categoryConstants";
 import axios from "axios";
 
 export const getCategories = () => async (dispatch:any) => {
+  try {
     const { data } = await axios.get("/api/categories");
     dispatch({
-        type: actionTypes.GET_CATEGORIES_REQUEST,
-        payload: data,
+      type: actionTypes.GET_CATEGORIES_REQUEST,
+      payload: data,
     });
+  } catch (error) {
+   
+    console.error("Erreur lors de la récupération des catégories:", error);
+   
+  }
 };
+
 
 export const saveAttributeToCatDoc = (key:any, val:any, categoryChoosen:any) => async (dispatch:any, getState:any) => {
     const { data } = await axios.post("/api/categories/attr", { key, val, categoryChoosen });
