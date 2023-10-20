@@ -20,7 +20,9 @@ import {
 type CreateProductPageComponentProps = {
     createProductApiRequest(a: any): Promise<any>
       uploadImagesApiRequest(a: any, b: any): Promise<any>;
-    uploadImagesCloudinaryApiRequest(a: any, b: any): any, categories: any; reduxDispatch(actions: any): any;
+  uploadImagesCloudinaryApiRequest(a: any, b: any): any,
+  categories: any;
+  reduxDispatch(actions: any): any;
   newCategory (category : any): any
     deleteCategory(category: any): any,
 saveAttributeToCatDoc(
@@ -42,7 +44,7 @@ const CreateProductPageComponent = ({
   const [validated, setValidated] = useState(false);
   const [attributesTable, setAttributesTable] = useState([]);
   const [attributesFromDb, setAttributesFromDb] = useState([]);
-  const [images, setImages] = useState<any>(false);
+  const [images, setImages] = useState<any>();
   const [isCreating, setIsCreating] = useState('');
   const [createProductResponseState, setCreateProductResponseState] = useState({
     message: '',
@@ -74,13 +76,13 @@ const CreateProductPageComponent = ({
     };
     if (event.currentTarget.checkValidity() === true) {
       if (images.length > 3) {
-        setIsCreating('to many files');
+        setIsCreating('too many files');
         return;
       }
       createProductApiRequest(formInputs)
         .then((data:any) => {
           if (images) {
-            if (process.env.NODE_ENV !== 'production') {
+            if (process.env.NODE_ENV === 'production') {
               // to do: change to !==
               uploadImagesApiRequest(images, data.productId)
                 .then((res:any) => {})
@@ -92,6 +94,8 @@ const CreateProductPageComponent = ({
                   )
                 );
             } else {
+              console.log("data",data);
+              console.log("data",images);
               uploadImagesCloudinaryApiRequest(images, data.productId);
             }
           }

@@ -252,13 +252,26 @@ const adminUpdateProduct = (req, res, next) => __awaiter(void 0, void 0, void 0,
 });
 exports.adminUpdateProduct = adminUpdateProduct;
 const adminUpload = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        if (!req.query.productId) {
+            const productCreationResponse = yield (0, exports.adminCreateProduct)(req, res, next);
+            const newlyCreatedProductId = productCreationResponse.productId;
+            req.query.productId = newlyCreatedProductId;
+        }
+    }
+    catch (err) {
+        console.log('err', err);
+        next(err);
+    }
     if (req.query.cloudinary === "true") {
         try {
             const product = yield ProductModel_1.default.findById(req.query.productId).orFail();
+            console.log('product', product);
             product.images.push({ path: req.body.url });
             yield product.save();
         }
         catch (err) {
+            console.log('err', err);
             next(err);
         }
         return;

@@ -179,7 +179,9 @@ export const adminCreateProduct = async (req, res, next) => {
         next(err);
     }
 };
-export const adminUpdateProduct = async (req, res, next) => {
+
+
+export const adminUpdateProduct = async (req, res, next)=> {
         try {
             const product = await Product.findByIdAndUpdate(req.params.id).orFail();
             const { name, description, count, price, category, attributesTable } =
@@ -205,13 +207,31 @@ export const adminUpdateProduct = async (req, res, next) => {
             next(err);
         }
 };
+interface AdminCreateProductResponse {
+    message: string;
+    productId: string; // Assurez-vous que le type correspond à l'ID du produit
+}
 export const adminUpload = async (req, res, next) => {
+    try {
+        
+        if (!req.query.productId) {
+            const productCreationResponse = await adminCreateProduct(req, res, next);
+
+            const newlyCreatedProductId = (productCreationResponse as unknown as AdminCreateProductResponse).productId;
+            req.query.productId = newlyCreatedProductId;
+        }
+    } catch (err) {
+        console.log('err', err);
+        next(err);
+    }
     if (req.query.cloudinary === "true") {
         try {
-            const  product = await Product.findById(req.query.productId).orFail();
+            const product = await Product.findById(req.query.productId).orFail();
+            console.log('product',product)
             product.images.push({ path: req.body.url });
             await product.save();
         } catch (err) {
+            console.log('err',err)
             next(err);
         }
         return;

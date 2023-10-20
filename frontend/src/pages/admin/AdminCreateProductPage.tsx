@@ -12,9 +12,14 @@ import {
 } from '../../redux/actions/categoryActions';
 import { useDispatch } from 'react-redux';
 
-const createProductApiRequest = async (formInputs:any) => {
-  const { data } = await axios.post(`/api/products/admin`, { ...formInputs });
-  return data;
+const createProductApiRequest = async (formInputs: any) => {
+  try {
+
+    const { data } = await axios.post(`/api/products/admin`, { ...formInputs });
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 const AdminCreateProductPage = () => {

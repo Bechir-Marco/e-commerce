@@ -45,7 +45,7 @@ export const registerUser = async (req, res, next) => {
                     ),
                     {
                         httpOnly: true,
-                        secure: process.env.NODE_ENV === "production",
+                        // secure: process.env.NODE_ENV === "production",
                         sameSite: "strict",
                     }
                 )
@@ -78,17 +78,18 @@ export const loginUser = async (req, res, next) => {
         if (user && comparePasswords(password, user.password)) {
             let cookieParams = {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
+                // secure: process.env.NODE_ENV === "production",
                 sameSite: "strict",
-                maxAge: undefined
+                maxAge: 24 * 60 * 60 * 1000 
             };
-
-            if (doNotLogout) {
+            
+            
                 if (doNotLogout) {
                    
-                    cookieParams = { ...cookieParams, maxAge: 60 * 60 * 24 * 7 };
+                    cookieParams = {
+                        ...cookieParams, maxAge: 24 * 60 * 60 * 7 * 1000 };
                 }
-            }
+            
 
             return res
                 .cookie(

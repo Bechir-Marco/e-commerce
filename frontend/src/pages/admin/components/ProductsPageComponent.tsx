@@ -39,11 +39,10 @@ useEffect(() => {
 
     try {
       const response = await fetchProducts();
-      console.log('Received products:', response);
+      
       setProducts(response);
     } catch (error) {
       
-        // Handle other errors here
         console.error('Error fetching products:', error);
         dispatch(logout());
       
