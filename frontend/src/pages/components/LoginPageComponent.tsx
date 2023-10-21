@@ -42,7 +42,7 @@ const LoginPageComponent: React.FC<LoginPageComponentProps> = ({
             loading: false,
             error: '',
           });
-          console.log(res.userLoggedIn);
+         
           if (res.userLoggedIn) {
             reduxDispatch(setReduxUserState(res.userLoggedIn));
           }

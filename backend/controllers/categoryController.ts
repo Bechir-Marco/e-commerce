@@ -46,7 +46,7 @@ export const deleteCategory = async (req, res, next) => {
 };
 
 export const saveAttr = async (req, res, next) => {
-    console.log(req.body);
+   
     const key = req.body.key;
     const val = req.body.val;
     const categoryChoosen = req.body.categoryChoosen;

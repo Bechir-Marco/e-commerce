@@ -31,9 +31,9 @@ export const createOrder = async (req, res, next) => {
         const qty = cartItems.map((item) => {
             return Number(item.quantity);
         });
-        console.log(ids);
+       
         await Product.find({ _id: { $in: ids } }).then((products) => {
-            console.log(products);
+            
             products.forEach(function (product, idx) {
                 product.sales += qty[idx];
                 product.save();
@@ -95,12 +95,12 @@ export const getOrderForAnalysis = async (req, res, next) => {
         const startDate = new Date(requestedDate);
         startDate.setHours(0, 0, 0, 0); 
 
-        console.log('startDate', startDate);
+       
         
         const endDate = new Date(requestedDate);
         endDate.setHours(23, 59, 59, 999); 
 
-        console.log('endDAte', endDate);
+        
 
         
         const orders = await Order.find({

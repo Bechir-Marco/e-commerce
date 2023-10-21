@@ -94,8 +94,7 @@ const CreateProductPageComponent = ({
                   )
                 );
             } else {
-              console.log("data",data);
-              console.log("data",images);
+             
               uploadImagesCloudinaryApiRequest(images, data.productId);
             }
           }
@@ -129,7 +128,7 @@ const CreateProductPageComponent = ({
         element.value = e.target.value;
         e.target.value = '';}
        
-      }, 200);
+      }, 400);
     }
   };
 

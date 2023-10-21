@@ -38,16 +38,16 @@ useEffect(() => {
 
 
   if (isAuth === undefined) {
-    console.log('1');
+
   return <LoginPage/>;
 }
 
 else if (isAuth  && admin) {
-    console.log('2');
+   
     return <Outlet />;
 }
 else if (isAuth  && !admin) {
-console.log('3');  return (
+  return (
     <>
       <UserChatComponent />
       <Outlet />
