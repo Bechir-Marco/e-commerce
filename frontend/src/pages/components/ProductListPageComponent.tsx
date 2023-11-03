@@ -28,16 +28,18 @@ const ProductListPageComponent = ({
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [attrsFilter, setAttrsFilter] = useState<any>([]); 
-  const [attrsFromFilter, setAttrsFromFilter] = useState([]); 
+  const [attrsFilter, setAttrsFilter] = useState<any>([]); // coollect category attrbiute from db and show it
+  const [attrsFromFilter, setAttrsFromFilter] = useState([]); // collect user filters for category attributes
   const [showResetFiltersButton, setShowResetFiltersButton] = useState(false);
 
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState({}); // collect all  filters
   const [price, setPrice] = useState(500);
   const [ratingsFromFilter, setRatingsFromFilter] = useState({});
   const [categoriesFromFilter, setCategoriesFromFilter] = useState({});
   const [sortOption, setSortOption] = useState('');
-  const [paginationLinksNumber, setPaginationLinksNumber] = useState<number | null | undefined >();
+  const [paginationLinksNumber, setPaginationLinksNumber] = useState<
+    number | null | undefined
+  >();
   const [pageNum, setPageNum] = useState(null);
 
   const { categoryName } = useParams() || '';
@@ -53,7 +55,9 @@ const ProductListPageComponent = ({
       );
       if (categoryAllData) {
         let mainCategory = categoryAllData.name.split('/')[0];
-        let index = categories.findIndex((item:any) => item.name === mainCategory);
+        let index = categories.findIndex(
+          (item: any) => item.name === mainCategory
+        );
         setAttrsFilter(categories[index].attrs);
       }
     } else {
@@ -64,16 +68,19 @@ const ProductListPageComponent = ({
   useEffect(() => {
     if (Object.entries(categoriesFromFilter).length > 0) {
       setAttrsFilter([]);
-      let cat:any = [];
+      let cat: any = [];
       var count;
       Object.entries(categoriesFromFilter).forEach(([category, checked]) => {
         if (checked) {
           var name = category.split('/')[0];
           cat.push(name);
-          count = cat.filter((x:any) => x === name).length;
+          count = cat.filter((x: any) => x === name).length;
           if (count === 1) {
-            var index = categories.findIndex((item:any) => item.name === name);
-            setAttrsFilter((attrs:any) => [...attrs, ...categories[index].attrs]);
+            var index = categories.findIndex((item: any) => item.name === name);
+            setAttrsFilter((attrs: any) => [
+              ...attrs,
+              ...categories[index].attrs,
+            ]);
           }
         }
       });

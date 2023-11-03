@@ -9,7 +9,7 @@ const PriceFilterComponent= ({ price, setPrice } : PriceFilterComponentProps) =>
   return (
     <>
       <Form.Label>
-        <span className="fw-bold">Price no greater than:</span> {price}$
+        <span className="fw-bold">Price No Greater Than:</span> {price}$
       </Form.Label>
       <Form.Range
         min={10}
