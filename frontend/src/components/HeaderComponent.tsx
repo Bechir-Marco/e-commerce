@@ -16,6 +16,13 @@ import { LinkContainer } from "react-router-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from 'react';
 import { getCategories } from '../redux/actions/categoryActions';
+import socketIOClient from 'socket.io-client';
+import {
+  setChatRooms,
+  setSocket,
+  setMessageReceived,
+  removeChatRoom,
+} from '../redux/actions/chatActions';
 
 const HeaderComponent = () => {
   const dispatch = useDispatch()<any>;
@@ -24,7 +31,7 @@ const HeaderComponent = () => {
  const { userInfo } = useSelector((state:any) => state.userRegisterLogin);
  const itemsCount = useSelector((state:any) => state.cart.itemsCount);
  const { categories } = useSelector((state:any) => state.getCategories);
- 
+ const { messageReceived } = useSelector((state:any) => state.adminChat);
 
  const [searchCategoryToggle, setSearchCategoryToggle] = useState('All');
  const [searchQuery, setSearchQuery] = useState('');
@@ -55,6 +62,42 @@ const HeaderComponent = () => {
       navigate('/product-list');
     }
   };
+
+  useEffect(() => {
+    if (userInfo.isAdmin) {
+      const audio = new Audio('/audio/chat-msg.mp3');
+      const socket = socketIOClient();
+
+      socket.emit(
+        'admin connected with server',
+        'Admin' + Math.floor(Math.random() * 1000000000000)
+      );
+
+      socket.on(
+        'server sends message from client to admin',
+        ({ user, message }) => {
+          dispatch(setSocket(socket));
+          dispatch(setChatRooms(user, message));
+          dispatch(setMessageReceived(true));
+          audio.play();
+        }
+      );
+
+      socket.on('disconnected', ({ reason, socketId }) => {
+        dispatch(removeChatRoom(socketId));
+      });
+
+      // Cleanup function for the socket
+      return () => {
+        socket.disconnect();
+        
+      };
+    }
+    
+    return () => {}; 
+  }, [userInfo.isAdmin]);
+
+  
  return (
    <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
      <Container>
@@ -97,9 +140,9 @@ const HeaderComponent = () => {
              <LinkContainer to="/admin/orders">
                <Nav.Link>
                  Admin
-                 {/* {messageReceived && ( */}
+                 {messageReceived && (
                    <span className="position-absolute top-1 start-10 translate-middle p-2 bg-danger border border-light rounded-circle"></span>
-                 {/* )} */}
+                 )}
                </Nav.Link>
              </LinkContainer>
            ) : userInfo.name && !userInfo.isAdmin ? (

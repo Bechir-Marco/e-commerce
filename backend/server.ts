@@ -4,10 +4,19 @@ import apiRoutes from "./routes/apiRoutes";
 import fileUpload from "express-fileupload"
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import { Server } from "socket.io";
+import  { createServer } from "http";
 connectDB();
-
 const app = express();
-const port = 5000;
+
+const httpServer = createServer(app);
+global.in = new Server(httpServer);
+
+global.io.on("connection", (socket) => {
+    socket.on("client sends message", (msg) => {
+        console.log(msg);
+    });
+})
 
 app.use(express.json()); // Parse JSON request bodies
 app.use(fileUpload())
@@ -44,6 +53,5 @@ app.use((error, req, res, next) => {
     }
 });
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`);
-});
+const PORT = process.env.PORT || 5000;
+httpServer.listen(PORT, () => console.log(`Server running on port ${PORT}`));

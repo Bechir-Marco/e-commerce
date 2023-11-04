@@ -46,5 +46,11 @@ const orderSchema = new mongoose.Schema({
 });
 
 const Order = mongoose.model("Order", orderSchema);
+Order.watch().on("change", (data) => {
+
+    if (data.operationType === "insert") {
+       global.io.emit("newOrder", data.fullDocument);
+    }
+})
 
 export default Order;
