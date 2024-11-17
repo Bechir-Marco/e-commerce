@@ -1,5 +1,21 @@
 import "../../custom-style/chats.css";
+import { useEffect, useState } from 'react';
+import socketIOClient from 'socket.io-client';
+import { useSelector } from 'react-redux';
+
 const UserChatComponent = () => {
+    const [socket, setSocket] = useState<any>(false);
+
+    useEffect(() => {
+      const newSocket = socketIOClient();
+      setSocket(newSocket);
+      // Return a cleanup function that performs the disconnect
+      return () => {
+        newSocket.disconnect();
+      };
+    }, []);
+
+
     return (
         <>
             <input type="checkbox" id="check" />

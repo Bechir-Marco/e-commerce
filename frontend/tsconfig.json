@@ -23,7 +23,7 @@
   },
   "include": [
     "src"
-  ],"typeRoots": [
+, "src/redux/actions/chatActions.ts"  ],"typeRoots": [
     "./typings",
     "./node_modules/@types/"
   ]
